@@ -1,0 +1,28 @@
+*,
+html,
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.slider-wrap {
+    width: 500px;
+    overflow: hidden;
+}
+
+.slider-wrap ul {
+    width: 10000px;
+    display: flex;
+    transition: 1s;
+    transform: translateX(0px);
+}
+
+.slider-wrap li img {
+    width: 500px;
+}
+
+slider-btn {
+    border: 2px solid black;
+    border-radius: 20%;
+}
