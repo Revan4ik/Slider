@@ -1,37 +1,80 @@
-let slides_content = ['https://picsum.photos/500/500', 'https://picsum.photos/600/600', 'https://picsum.photos/700/700'],
-    btn = document.querySelectorAll('.slider-btn'),
-    mover = document.querySelector('.slider-wrap ul'),
-    count = 0
-slides_content.forEach(el => {
-    let li = document.createElement("li"),
-        img = document.createElement("img")
-    img.src = el
-    mover.appendChild(li)
-    li.appendChild(img)
-});
-let slides = mover.querySelectorAll('li')
-slides[count].classList.add('active')
-const onMove = () => {
-    const active = mover.querySelector('.active')
-    const next = active.nextElementSibling
-    let width = 0
-    if (next) {
-        width = getComputedStyle(next).width
-        count++;
-        active.classList.remove('active')
-        next.classList.add('active')
-    } else {
-        count = 0;
-        active.classList.remove('active')
-        slides[count].classList.add('active')
-    }
-    mover.style.transform = `translateX(${-parseInt(width) * count}px)`
+
+const myAllImages = document.querySelectorAll(".slider-container img");
+const nextButton = document.getElementById('btn-right');
+const prevButton = document.getElementById('btn-left');
+const indecatorParent = document.querySelector('#indecators');
+const sliderText = document.getElementById('slide-number');
+
+const slidesCount = myAllImages.length;
+
+let startCounting = 0;
+
+nextButton.addEventListener('click', moveToNext);
+prevButton.addEventListener('click', moveToPrev);
+
+let indecatorsItems = document.createElement('ul');
+indecatorsItems.setAttribute('class', 'ul-items');
+
+for (let i = 0; i < slidesCount; i += 1) {
+    let indecatorsListItems = document.createElement('li');
+
+    indecatorsItems.appendChild(indecatorsListItems);
 }
-btn.forEach(elem => {
-    if (elem.classList.contains('slider__next')) {
-        elem.addEventListener('click', onMove)
+
+indecatorParent.appendChild(indecatorsItems);
+
+const newUlList = document.querySelectorAll('.ul-items li');
+
+theChecker();
+
+
+function moveToNext() {
+    if (nextButton.classList.contains('disable')) {
+        return false;
     } else {
-
+        startCounting++;
+        theChecker();
     }
+}
 
-})
+function moveToPrev() {
+    if (prevButton.classList.contains('disable')) {
+        return false;
+    } else {
+        startCounting--;
+        theChecker();
+    }
+}
+
+for (let i = 0; i < newUlList.length; i++) {
+    newUlList[i].onclick = function () {
+        startCounting = i;
+        theChecker();
+    }
+}
+
+
+function theChecker() {
+    removeAll();
+    myAllImages[startCounting].classList.add('active');
+    newUlList[startCounting].classList.add('active');
+}
+
+function removeAll() {
+    for (let j = 0; j < slidesCount; j++) {
+        myAllImages[j].classList.remove('active');
+    }
+    for (let j = 0; j < newUlList.length; j++) {
+        newUlList[j].classList.remove('active');
+    }
+    if (startCounting === 0) {
+        prevButton.classList.add('disable')
+    } else {
+        prevButton.classList.remove('disable')
+    }
+    if (startCounting === slidesCount - 1) {
+        nextButton.classList.add('disable')
+    } else {
+        nextButton.classList.remove('disable')
+    }
+}
